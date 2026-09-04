@@ -55,7 +55,7 @@
             onclick={() => ratingStore.markTried(flavor.id, !ratingStore.isTried(flavor.id))}
             aria-expanded={ratingStore.isTried(flavor.id)}
             aria-controls={`rating-${flavor.id}`}
-          ><span>{ratingStore.isTried(flavor.id) ? '−' : '✓'}</span>{ratingStore.isTried(flavor.id) ? 'Oznacz jako niespróbowany' : 'Oceń'}</button>
+          ><span>{ratingStore.isTried(flavor.id) ? '−' : '✓'}</span>{ratingStore.isTried(flavor.id) ? 'Cofnij' : 'Oceń'}</button>
         </div>
         {#if ratingStore.isTried(flavor.id)}
           <div class="ratings" id={`rating-${flavor.id}`}><PersonRating flavorId={flavor.id} person="filip"/><PersonRating flavorId={flavor.id} person="emilia"/></div>

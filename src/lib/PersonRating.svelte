@@ -12,11 +12,13 @@
   let initial = $derived(person === 'filip' ? 'F' : 'E');
   let value = $derived(ratingStore.for(flavorId)[person]);
   let selected = $derived(ratingStore.level(value));
+  let selectedLabel = $derived(levels.find((level) => level.id === selected)?.label ?? 'Neutralny');
+  let selectedIndex = $derived(levels.findIndex((level) => level.id === selected));
 </script>
 
 <div class:compact class="person-rating">
-  <div class="person-name"><span class:emilia={person === 'emilia'}>{initial}</span>{label}</div>
-  <div class="rating-scale" role="radiogroup" aria-label={`Ocena: ${label}`}>
+  <div class="person-name"><span class:emilia={person === 'emilia'}>{initial}</span>{label}<strong class={`selected-level ${selected}`}>{selectedLabel}</strong></div>
+  <div class="rating-scale" style={`--level-fill: ${Math.max(0, selectedIndex) * 25}%; --level-fill-correction: ${Math.max(0, selectedIndex) * 8}px`} role="radiogroup" aria-label={`Ocena: ${label}`}>
     {#each levels as level}
       <button
         class={`rating-level ${level.id}`}
@@ -24,7 +26,7 @@
         role="radio"
         aria-checked={selected === level.id}
         onclick={() => ratingStore.setLevel(flavorId, person, level.id)}
-      ><span class="level-mark"></span><span>{level.label}</span></button>
+      ><span class="level-mark"></span><span class="level-label">{level.label}</span></button>
     {/each}
   </div>
 </div>

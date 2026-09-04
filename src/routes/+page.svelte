@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { flavors, familyLabels } from '$lib/flavors';
+  import { flavors, familyLabels, getShopUrl } from '$lib/flavors';
   import PersonRating from '$lib/PersonRating.svelte';
   import Search from '$lib/icons/Search.svelte';
   import { ratingStore } from '$lib/ratings.svelte';
@@ -45,7 +45,10 @@
     {#each filtered as flavor (flavor.id)}
       <article class:expanded={ratingStore.isTried(flavor.id)} class:excluded={ratingStore.tier(flavor.id) === 'excluded'} class="flavor-row">
         <div class="flavor-summary">
-          <div class="flavor-identity"><div class={`flavor-icon ${flavor.family}`}>{flavor.emoji}</div><h2>{flavor.name}</h2></div>
+          <div class="flavor-identity">
+            <div class={`flavor-icon ${flavor.family}`}>{flavor.emoji}</div>
+            <div class="flavor-copy"><h2>{flavor.name}</h2><a href={getShopUrl(flavor)} target="_blank" rel="noreferrer">Sklep Bolero <span aria-hidden="true">↗</span></a></div>
+          </div>
           <button
             class="tried-button"
             class:opened={ratingStore.isTried(flavor.id)}

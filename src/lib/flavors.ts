@@ -49,3 +49,6 @@ export const flavors: Flavor[] = raw.map(([name, original, family, emoji]) => ({
 export const familyLabels: Record<Flavor['family'], string> = {
   owocowe: 'Owocowe', cytrusowe: 'Cytrusowe', egzotyczne: 'Egzotyczne', deserowe: 'Deserowe', inne: 'Inne'
 };
+
+export const getShopUrl = (flavor: Flavor) =>
+  `https://bolero.pl/catalogsearch/result/?q=${encodeURIComponent(flavor.original)}`;

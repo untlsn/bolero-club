@@ -1,5 +1,5 @@
 import { flavors } from './flavors';
-import type { FlavorRating, Person, PersonRating, Ratings, Tier } from './types';
+import type { FlavorRating, Person, PersonRating, RatingLevel, Ratings, Tier } from './types';
 
 const emptyPerson = (): PersonRating => ({ tastesGood: false, exceptional: false, awful: false });
 const emptyFlavor = (): FlavorRating => ({ filip: emptyPerson(), emilia: emptyPerson(), tried: false });
@@ -47,14 +47,20 @@ export const ratingStore = {
       syncError = error instanceof Error ? error.message : 'Nie udało się zapisać zmian.';
     }
   },
-  async update(flavorId: string, person: Person, field: keyof PersonRating) {
+  level(rating: PersonRating): RatingLevel {
+    if (rating.awful) return 'awful';
+    if (rating.exceptional) return 'exceptional';
+    if (rating.tastesGood) return 'tasty';
+    return 'neutral';
+  },
+  async setLevel(flavorId: string, person: Person, level: RatingLevel) {
     const previous = ratings;
     const current = ratings[flavorId] ?? emptyFlavor();
-    const nextPerson = { ...current[person], [field]: !current[person][field] };
-    if (field === 'exceptional' && nextPerson.exceptional) { nextPerson.tastesGood = true; nextPerson.awful = false; }
-    if (field === 'tastesGood' && !nextPerson.tastesGood) nextPerson.exceptional = false;
-    if (field === 'tastesGood' && nextPerson.tastesGood) nextPerson.awful = false;
-    if (field === 'awful' && nextPerson.awful) { nextPerson.tastesGood = false; nextPerson.exceptional = false; }
+    const nextPerson: PersonRating = {
+      awful: level === 'awful',
+      tastesGood: level === 'tasty' || level === 'exceptional',
+      exceptional: level === 'exceptional'
+    };
     ratings = { ...ratings, [flavorId]: { ...current, tried: true, [person]: nextPerson } };
     try {
       await request({

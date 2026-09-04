@@ -1,4 +1,5 @@
 export type Person = 'filip' | 'emilia';
+export type RatingLevel = 'awful' | 'neutral' | 'tasty' | 'exceptional';
 
 export type PersonRating = {
   tastesGood: boolean;

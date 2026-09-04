@@ -117,6 +117,92 @@
   gap: 18px;
 }
 
+.person-rating {
+  grid-template-columns: 70px minmax(0, 1fr);
+  gap: 9px;
+}
+
+.rating-scale {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid #deddd6;
+  border-radius: 11px;
+  background: #efede7;
+}
+
+.rating-level {
+  position: relative;
+  min-width: 0;
+  height: 38px;
+  padding: 10px 3px 2px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #777873;
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.rating-level:hover {
+  background: #ffffffb8;
+  color: #343733;
+}
+
+.rating-level:focus-visible {
+  outline: 2px solid #32735b;
+  outline-offset: 2px;
+}
+
+.level-mark {
+  position: absolute;
+  top: 5px;
+  left: 7px;
+  right: 7px;
+  height: 4px;
+  border-radius: 99px;
+  background: #d3d2cc;
+}
+
+.rating-level.active {
+  background: #fff;
+  color: #262a27;
+  box-shadow: 0 2px 7px #1c211e12;
+}
+
+.rating-level.awful.active {
+  background: #fff0f1;
+  color: #a93643;
+}
+
+.rating-level.awful.active .level-mark {
+  background: #cf4654;
+}
+
+.rating-level.neutral.active .level-mark {
+  background: #777b76;
+}
+
+.rating-level.tasty.active {
+  background: #eff8d9;
+  color: #335315;
+}
+
+.rating-level.tasty.active .level-mark {
+  background: #83aa1e;
+}
+
+.rating-level.exceptional.active {
+  background: #285b47;
+  color: #fff;
+}
+
+.rating-level.exceptional.active .level-mark {
+  background: #c9ef4a;
+}
+
 @media (max-width: 760px) {
   .flavor-row {
     padding: 9px 11px;
@@ -128,6 +214,10 @@
 
   .flavor-row .ratings {
     gap: 11px;
+  }
+
+  .person-rating {
+    grid-template-columns: 62px minmax(0, 1fr);
   }
 
   .flavor-icon {

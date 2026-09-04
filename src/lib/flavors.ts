@@ -39,15 +39,38 @@ const raw: Array<[string, string, Flavor['family'], string]> = [
   ['Arbuz', 'Watermelon', 'owocowe', '🍉'], ['Białe winogrono', 'White Grape', 'owocowe', '🍇'],
   ['Jogurt', 'Yoghurt', 'deserowe', '🥛'], ['Mrożona herbata cytrynowa', 'Ice Tea Lemon', 'cytrusowe', '🧊'],
   ['Mrożona herbata brzoskwiniowa', 'Ice Tea Peach', 'owocowe', '🧊'], ['Mrożona herbata marakuja', 'Ice Tea Passionfruit', 'egzotyczne', '🧊'],
-  ['Izotonik pomarańczowy', 'Sport', 'inne', '🏃'], ['Energy Original', 'Energy Original', 'inne', '⚡']
+  ['Izotonik pomarańczowy', 'Sport', 'inne', '🏃']
+];
+
+// Flavors shared by the 7 g and 14 g ranges: https://bolero.pl/energy/bolero-energy-7g
+const energy: Array<[string, string, string]> = [
+  ['Original', 'Original', '🥤'], ['Power Punch', 'Power Punch', '🥊'],
+  ['Tropical Punch', 'Tropical Punch', '🌴'], ['Blue', 'Blue', '🔵'],
+  ['Brzoskwinia i nektarynka', 'Peach&Nectarine', '🍑'], ['Mixed Punch', 'Mixed Punch', '🍹'],
+  ['Pacific Punch', 'Pacific Punch', '🌊'], ['Mrożona zielona herbata', 'Green Iced Tea', '🍵'],
+  ['Jabłko', 'Apple', '🍏'], ['Kola', 'Kola', '🥤'],
+  ['Exotic Punch', 'Exotic Punch', '🌴'], ['Truskawka', 'Strawberry', '🍓'],
+  ['Czerwone winogrono', 'Red Grape', '🍇'], ['Mrożona herbata brzoskwiniowa', 'Iced Tea Peach', '🍑'],
+  ['Mrożona herbata cytrynowa', 'Iced Tea Lemon', '🍋'], ['Mango', 'Mango', '🥭'],
+  ['Arbuz', 'Watermelon', '🍉'], ['Ananas', 'Pineapple', '🍍'],
+  ['Kiwi, limonka i ogórek', 'Kiwi-Lime&Cucumber', '🥝'], ['Imbir i limonka', 'Ginger&Lime', '🫚']
 ];
 
 const slug = (value: string) => value.toLocaleLowerCase('pl').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ł/g, 'l').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
-export const flavors: Flavor[] = raw.map(([name, original, family, emoji]) => ({ id: slug(original), name, original, family, emoji }));
+export const flavors: Flavor[] = [
+  ...raw.map(([name, original, family, emoji]) => ({ id: slug(original), name, original, family, emoji })),
+  ...energy.map(([name, original, emoji]): Flavor => ({
+    id: slug(`Energy ${original}`), name: `⚡ ${name}`, original: `Energy ${original}`,
+    family: 'energetyki', emoji
+  }))
+];
+
+export const getFlavorName = (flavor: Flavor) =>
+  flavor.family === 'energetyki' ? `⚡ ${flavor.original.replace(/^Energy /, '')}` : flavor.original;
 
 export const familyLabels: Record<Flavor['family'], string> = {
-  owocowe: 'Owocowe', cytrusowe: 'Cytrusowe', egzotyczne: 'Egzotyczne', deserowe: 'Deserowe', inne: 'Inne'
+  owocowe: 'Owocowe', cytrusowe: 'Cytrusowe', egzotyczne: 'Egzotyczne', deserowe: 'Deserowe', inne: 'Inne', energetyki: '⚡ Energetyki'
 };
 
 export const getShopUrl = (flavor: Flavor) =>

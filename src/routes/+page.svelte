@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { flavors, familyLabels, getShopUrl } from '$lib/flavors';
+  import { flavors, familyLabels, getShopUrl, getFlavorName } from '$lib/flavors';
   import PersonRating from '$lib/PersonRating.svelte';
   import * as Alert from '$lib/components/ui/alert/index.js';
   import { Badge } from '$lib/components/ui/badge/index.js';
@@ -85,7 +85,7 @@
         <div class="flavor-summary">
           <div class="flavor-identity">
             <div class={`flavor-icon ${flavor.family}`}>{flavor.emoji}</div>
-            <div class="flavor-copy"><h2>{flavor.original}</h2><a href={getShopUrl(flavor)} target="_blank" rel="noreferrer">Sklep Bolero <span aria-hidden="true">↗</span></a></div>
+            <div class="flavor-copy"><h2>{getFlavorName(flavor)}</h2><a href={getShopUrl(flavor)} target="_blank" rel="noreferrer">Sklep Bolero <span aria-hidden="true">↗</span></a></div>
           </div>
           <Button
             variant={ratingStore.isTried(flavor.id) ? 'outline' : 'default'}

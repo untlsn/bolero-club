@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { flavors, getShopUrl } from '$lib/flavors';
+  import { flavors, getShopUrl, getFlavorName } from '$lib/flavors';
   import * as Alert from '$lib/components/ui/alert/index.js';
   import * as Avatar from '$lib/components/ui/avatar/index.js';
   import { Badge } from '$lib/components/ui/badge/index.js';
@@ -69,9 +69,9 @@
           {#each grouped[tier.id] as flavor (flavor.id)}
             <Card.Root size="sm" class="tier-flavor flex-row">
               <Avatar.Root><Avatar.Fallback class="tier-flavor-icon">{flavor.emoji}</Avatar.Fallback></Avatar.Root>
-              <div class="tier-flavor-copy"><strong>{flavor.original}</strong><a href={getShopUrl(flavor)} target="_blank" rel="noreferrer">Sklep Bolero ↗</a></div>
+              <div class="tier-flavor-copy"><strong>{getFlavorName(flavor)}</strong><a href={getShopUrl(flavor)} target="_blank" rel="noreferrer">Sklep Bolero ↗</a></div>
               {#if tier.id !== 'untried'}
-                <div class="tier-votes" aria-label={`Oceny smaku ${flavor.original}`}>
+                <div class="tier-votes" aria-label={`Oceny smaku ${getFlavorName(flavor)}`}>
                   <Badge variant="secondary" class="vote-f" title="Filip">F <b>{verdict(ratingStore.for(flavor.id).filip)}</b></Badge>
                   <Badge variant="secondary" class="vote-e" title="Emilia">E <b>{verdict(ratingStore.for(flavor.id).emilia)}</b></Badge>
                 </div>

@@ -14,7 +14,7 @@ export type Flavor = {
   id: string;
   name: string;
   original: string;
-  family: 'owocowe' | 'cytrusowe' | 'egzotyczne' | 'deserowe' | 'inne';
+  family: 'owocowe' | 'cytrusowe' | 'egzotyczne' | 'deserowe' | 'inne' | 'energetyki';
   emoji: string;
 };
 

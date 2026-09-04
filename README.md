@@ -1,6 +1,6 @@
 # Bolero Club
 
-Prywatny ranking 78 smaków Bolero dla Filipa i Emilii. Oceny są przechowywane w SQLite przez libSQL i Drizzle ORM, dzięki czemu bazę można później przenieść do Turso bez zmiany warstwy danych.
+Prywatny ranking 97 smaków (w tym 20 energetyków) Bolero dla Filipa i Emilii. Oceny są przechowywane w SQLite przez libSQL i Drizzle ORM, dzięki czemu bazę można później przenieść do Turso bez zmiany warstwy danych.
 
 ```bash
 npm install

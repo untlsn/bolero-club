@@ -11,3 +11,12 @@ npm run dev
 Domyślna baza to lokalny plik `local.db`. Konfigurację Turso opisuje plik `.env.example`.
 
 Oceny są dostępne na stronie głównej, a automatyczny ranking pod adresem `/tier-lista`.
+
+## Vercel + Turso
+
+1. Utwórz bazę Turso i token dostępu.
+2. Uruchom migracje, przekazując `DATABASE_URL` i `DATABASE_AUTH_TOKEN` do `npm run db:migrate`.
+3. Dodaj obie zmienne do środowisk `Production`, `Preview` i `Development` w Vercelu.
+4. Połącz repozytorium z Vercel i wdroż aplikację. Projekt używa oficjalnego adaptera Vercel, Node.js 24 i regionu `fra1`.
+
+Lokalny development nadal domyślnie korzysta z `file:local.db`.

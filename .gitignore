@@ -3,3 +3,6 @@ node_modules
 build
 .env
 .DS_Store
+local.db
+local.db-shm
+local.db-wal

@@ -119,3 +119,19 @@
     padding: 0 10px;
   }
 }
+
+.db-error {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 30;
+  max-width: 360px;
+  padding: 12px 16px;
+  border: 1px solid #e8b8bd;
+  border-radius: 10px;
+  background: #fff1f2;
+  color: #9f3340;
+  box-shadow: 0 10px 30px #61212a20;
+  font-size: 13px;
+  font-weight: 600;
+}

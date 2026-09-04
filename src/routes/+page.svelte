@@ -4,6 +4,9 @@
   import Search from '$lib/icons/Search.svelte';
   import { ratingStore } from '$lib/ratings.svelte';
   import type { Flavor } from '$lib/types';
+  import { onMount } from 'svelte';
+
+  onMount(() => { void ratingStore.load(); });
 
   let query = $state('');
   let family = $state<'wszystkie' | Flavor['family']>('wszystkie');
@@ -19,6 +22,7 @@
 </script>
 
 <main>
+  {#if ratingStore.syncError}<div class="db-error" role="alert">{ratingStore.syncError}</div>{/if}
   <section class="hero">
     <div><p class="eyebrow">PRYWATNY RANKING SMAKÓW</p><h1>Znajdźmy nasze<br/><span>Bolero idealne.</span></h1><p class="lead">Dwie opinie, jeden bezlitosny ranking. Zaznaczcie, co smakuje — resztą zajmiemy się my.</p></div>
     <div class="progress-card">

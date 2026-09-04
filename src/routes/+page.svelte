@@ -29,7 +29,7 @@
       <div class="progress-top"><span>Wspólny postęp</span><strong>{Math.round((tried / flavors.length) * 100)}%</strong></div>
       <div class="progress-track"><span style={`width: ${(tried / flavors.length) * 100}%`}></span></div>
       <p><strong>{tried}</strong> z {flavors.length} smaków spróbowanych</p>
-      <a href="#tier-lista" aria-disabled="true">Zobacz aktualny ranking <span>→</span></a>
+      <a href="/tier-lista">Zobacz aktualny ranking <span>→</span></a>
     </div>
   </section>
 

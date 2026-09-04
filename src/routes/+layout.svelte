@@ -1,6 +1,7 @@
 <script lang="ts">
   import '../styles.css';
   import '../accordion.css';
+  import '../tier-list.css';
   import { page } from '$app/state';
   let { children } = $props();
 </script>
@@ -11,7 +12,7 @@
   <a class="brand" href="/" aria-label="Bolero Club — strona główna"><span class="brand-mark">B</span><span>Bolero <em>Club</em></span></a>
   <nav aria-label="Główna nawigacja">
     <a href="/" class:active={page.url.pathname === '/'}>Oceny</a>
-    <a href="#tier-lista" aria-disabled="true" title="Widok powstanie w kolejnym etapie">Tier lista</a>
+    <a href="/tier-lista" class:active={page.url.pathname.startsWith('/tier-lista')}>Tier lista</a>
   </nav>
   <div class="duo" aria-label="Filip i Emilia"><span>F</span><span>E</span></div>
 </header>

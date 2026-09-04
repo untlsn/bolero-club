@@ -9,3 +9,5 @@ npm run dev
 ```
 
 Domyślna baza to lokalny plik `local.db`. Konfigurację Turso opisuje plik `.env.example`.
+
+Oceny są dostępne na stronie głównej, a automatyczny ranking pod adresem `/tier-lista`.

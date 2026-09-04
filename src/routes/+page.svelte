@@ -47,7 +47,7 @@
         <div class="flavor-summary">
           <div class="flavor-identity">
             <div class={`flavor-icon ${flavor.family}`}>{flavor.emoji}</div>
-            <div class="flavor-copy"><h2>{flavor.name}</h2><a href={getShopUrl(flavor)} target="_blank" rel="noreferrer">Sklep Bolero <span aria-hidden="true">↗</span></a></div>
+            <div class="flavor-copy"><h2>{flavor.original}</h2><a href={getShopUrl(flavor)} target="_blank" rel="noreferrer">Sklep Bolero <span aria-hidden="true">↗</span></a></div>
           </div>
           <button
             class="tried-button"

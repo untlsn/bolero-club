@@ -58,9 +58,9 @@
           {#each grouped[tier.id] as flavor (flavor.id)}
             <div class="tier-flavor">
               <span class="tier-flavor-icon">{flavor.emoji}</span>
-              <div class="tier-flavor-copy"><strong>{flavor.name}</strong><a href={getShopUrl(flavor)} target="_blank" rel="noreferrer">Sklep Bolero ↗</a></div>
+              <div class="tier-flavor-copy"><strong>{flavor.original}</strong><a href={getShopUrl(flavor)} target="_blank" rel="noreferrer">Sklep Bolero ↗</a></div>
               {#if tier.id !== 'untried'}
-                <div class="tier-votes" aria-label={`Oceny smaku ${flavor.name}`}>
+                <div class="tier-votes" aria-label={`Oceny smaku ${flavor.original}`}>
                   <i class="vote-f" title="Filip">F <b>{verdict(ratingStore.for(flavor.id).filip)}</b></i>
                   <i class="vote-e" title="Emilia">E <b>{verdict(ratingStore.for(flavor.id).emilia)}</b></i>
                 </div>

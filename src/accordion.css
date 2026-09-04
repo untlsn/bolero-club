@@ -230,6 +230,27 @@
   }
 }
 
+@media (max-width: 520px) {
+  .person-rating {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 7px;
+  }
+
+  .person-name,
+  .rating-scale {
+    grid-column: 1;
+  }
+
+  .rating-scale {
+    width: 100%;
+  }
+
+  .rating-level {
+    padding-inline: 1px;
+    font-size: 8px;
+  }
+}
+
 .db-error {
   position: fixed;
   right: 20px;

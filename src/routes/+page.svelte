@@ -57,9 +57,16 @@
             aria-controls={`rating-${flavor.id}`}
           ><span>{ratingStore.isTried(flavor.id) ? '−' : '✓'}</span>{ratingStore.isTried(flavor.id) ? 'Cofnij' : 'Oceń'}</button>
         </div>
-        {#if ratingStore.isTried(flavor.id)}
-          <div class="ratings" id={`rating-${flavor.id}`}><PersonRating flavorId={flavor.id} person="filip"/><PersonRating flavorId={flavor.id} person="emilia"/></div>
-        {/if}
+        <div
+          class:open={ratingStore.isTried(flavor.id)}
+          class="ratings-collapse"
+          aria-hidden={!ratingStore.isTried(flavor.id)}
+          inert={!ratingStore.isTried(flavor.id)}
+        >
+          <div class="ratings-shell">
+            <div class="ratings" id={`rating-${flavor.id}`}><PersonRating flavorId={flavor.id} person="filip"/><PersonRating flavorId={flavor.id} person="emilia"/></div>
+          </div>
+        </div>
       </article>
     {:else}
       <div class="empty"><span>🍋</span><h2>Nie znaleźliśmy takiego smaku</h2><p>Zmień wyszukiwanie albo wyczyść filtry.</p></div>

@@ -8,6 +8,7 @@
   padding: 10px 14px;
   border-radius: 6px;
   transform: none;
+  transition: padding 200ms ease-out, border-color 200ms ease-out, background-color 200ms ease-out, box-shadow 200ms ease-out;
 }
 
 .flavor-row:hover {
@@ -35,6 +36,7 @@
   border-radius: 11px;
   font-size: 22px;
   flex: 0 0 auto;
+  transition: width 200ms ease-out, height 200ms ease-out, font-size 200ms ease-out;
 }
 
 .expanded .flavor-icon {
@@ -76,6 +78,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
+  transition: color 150ms ease-out, background-color 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out;
 }
 
 .tried-button span {
@@ -108,6 +111,23 @@
 .tried-button.opened:hover {
   background: #e9f2ed;
   border-color: #789b8c;
+}
+
+.ratings-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 200ms ease-out, opacity 150ms ease-out;
+}
+
+.ratings-collapse.open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.ratings-shell {
+  min-height: 0;
+  overflow: hidden;
 }
 
 .flavor-row .ratings {
@@ -175,6 +195,7 @@
   height: 12px;
   border-radius: 99px 0 0 99px;
   background: #d9eda1;
+  transition: width 180ms ease-out, background-color 180ms ease-out;
 }
 
 .rating-level {
@@ -202,7 +223,7 @@
   border-radius: 50%;
   background: #a9aaa5;
   transform: translateX(-50%);
-  transition: 0.18s ease;
+  transition: top 180ms ease-out, width 180ms ease-out, height 180ms ease-out, background-color 180ms ease-out, box-shadow 180ms ease-out;
 }
 
 .level-label {
@@ -295,6 +316,17 @@
     width: 100%;
   }
 
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flavor-row,
+  .flavor-icon,
+  .tried-button,
+  .ratings-collapse,
+  .rating-scale::after,
+  .level-mark {
+    transition-duration: 0.01ms;
+  }
 }
 
 .db-error {

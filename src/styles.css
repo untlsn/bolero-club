@@ -19,8 +19,7 @@ body {
     radial-gradient(circle at 12% 6%, #fff 0, transparent 25%), #f6f3eb;
 }
 button,
-input,
-select {
+input {
   font: inherit;
 }
 button,
@@ -72,23 +71,6 @@ nav {
 }
 .duo {
   display: flex;
-}
-.duo span {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border: 3px solid #f6f3eb;
-  border-radius: 50%;
-  background: #dce9ff;
-  color: #25476b;
-  font-weight: 700;
-  font-size: 13px;
-}
-.duo span + span {
-  margin-left: -9px;
-  background: #ffe2e9;
-  color: #85384b;
 }
 main {
   max-width: 1240px;
@@ -152,13 +134,6 @@ main {
   margin: 18px 0 13px;
   overflow: hidden;
 }
-.progress-track span {
-  display: block;
-  height: 100%;
-  background: var(--lime);
-  border-radius: 10px;
-  transition: width 300ms ease-out;
-}
 .progress-card p {
   font-size: 13px;
   color: #b9cec5;
@@ -188,60 +163,14 @@ main {
   border-radius: 6px;
   box-shadow: 0 8px 30px #272c2910;
 }
-.search {
-  height: 43px;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  background: #f4f2ec;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  padding: 0 14px;
+.search-field {
   flex: 1;
-  color: #858781;
 }
-.search:focus-within {
-  border-color: #91a99e;
-  background: #fff;
+.family-select {
+  width: 185px;
 }
-.search input {
-  border: 0;
-  outline: 0;
-  background: transparent;
-  width: 100%;
-  color: var(--ink);
-}
-select {
-  height: 43px;
-  padding: 0 37px 0 14px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: #fff;
-  color: #51534f;
-  font-weight: 600;
-  font-size: 13px;
-}
-.status-tabs {
-  display: flex;
-  padding: 4px;
-  background: #efede7;
-  border-radius: 10px;
-}
-.status-tabs button {
-  height: 35px;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
-  padding: 0 14px;
-  color: #777873;
-  font-weight: 600;
-  font-size: 12px;
-  cursor: pointer;
-}
-.status-tabs button.active {
-  color: #174e3b;
-  background: #fff;
-  box-shadow: 0 2px 7px #0000000d;
+.status-filter {
+  flex: 0 0 auto;
 }
 .list-heading {
   display: flex;
@@ -351,19 +280,6 @@ select {
   font-weight: 700;
   font-size: 12px;
 }
-.person-name > span {
-  width: 24px;
-  height: 24px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #dce9ff;
-  color: #31587e;
-}
-.person-name > span.emilia {
-  background: #ffe2e9;
-  color: #91445a;
-}
 .empty {
   text-align: center;
   padding: 70px;
@@ -410,12 +326,19 @@ footer span:first-child {
   color: var(--app-muted);
   margin: 16px 0;
 }
+.tier-stats {
+  flex-direction: row;
+  gap: 0;
+  padding: 0;
+}
 .tier-board {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 .tier-section {
+  gap: 0;
+  padding: 0;
   background: #fff;
   border: 1px solid var(--line);
   border-radius: 18px;
@@ -478,6 +401,7 @@ footer span:first-child {
 }
 .tier-flavor {
   min-height: 70px;
+  flex-direction: row;
   background: #fff;
   padding: 12px 17px;
   display: flex;
@@ -587,19 +511,15 @@ footer span:first-child {
     align-items: stretch;
     flex-wrap: wrap;
   }
-  .search {
+  .search-field {
     flex-basis: 100%;
   }
-  select {
-    flex: 1;
-  }
-  .status-tabs {
-    order: 3;
+  .family-select,
+  .status-filter {
     width: 100%;
   }
-  .status-tabs button {
-    flex: 1;
-    padding: 0 4px;
+  .status-filter {
+    order: 3;
   }
   .flavor-row {
     padding: 16px;

@@ -5,6 +5,7 @@
 	import '../tier-list.css';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
+	import * as Avatar from '$lib/components/ui/avatar/index.js';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 
 	let { children } = $props();
@@ -36,14 +37,17 @@
 
 	<nav aria-label="Główna nawigacja">
 		<Tabs.Root value={activeTab} onValueChange={changeTab}>
-			<Tabs.List>
+			<Tabs.List class="group-data-horizontal/tabs:h-10">
 				<Tabs.Trigger value="/">Oceny</Tabs.Trigger>
 				<Tabs.Trigger value="/tier-lista">Tier lista</Tabs.Trigger>
 			</Tabs.List>
 		</Tabs.Root>
 	</nav>
 
-	<div class="duo" aria-label="Filip i Emilia"><span>F</span><span>E</span></div>
+	<Avatar.Group class="duo" aria-label="Filip i Emilia">
+		<Avatar.Root size="sm"><Avatar.Fallback class="bg-blue-100 text-blue-800">F</Avatar.Fallback></Avatar.Root>
+		<Avatar.Root size="sm"><Avatar.Fallback class="bg-pink-100 text-pink-800">E</Avatar.Fallback></Avatar.Root>
+	</Avatar.Group>
 </header>
 
 {@render children()}

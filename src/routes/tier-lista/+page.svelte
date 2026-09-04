@@ -1,8 +1,16 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { flavors, getShopUrl } from '$lib/flavors';
+  import * as Alert from '$lib/components/ui/alert/index.js';
+  import * as Avatar from '$lib/components/ui/avatar/index.js';
+  import { Badge } from '$lib/components/ui/badge/index.js';
+  import { Button } from '$lib/components/ui/button/index.js';
+  import * as Card from '$lib/components/ui/card/index.js';
+  import * as Empty from '$lib/components/ui/empty/index.js';
   import { ratingStore } from '$lib/ratings.svelte';
   import type { Flavor, PersonRating, Tier } from '$lib/types';
+  import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
+  import CircleAlertIcon from '@lucide/svelte/icons/circle-alert';
 
   type TierDefinition = { id: Tier; rank: string; label: string; icon: string; description: string };
 
@@ -32,47 +40,58 @@
 <svelte:head><title>Tier lista · Bolero Club</title></svelte:head>
 
 <main class="tier-page">
-  {#if ratingStore.syncError}<div class="db-error" role="alert">{ratingStore.syncError}</div>{/if}
+  {#if ratingStore.syncError}
+    <Alert.Root class="db-error" variant="destructive">
+      <CircleAlertIcon />
+      <Alert.Title>Błąd synchronizacji</Alert.Title>
+      <Alert.Description>{ratingStore.syncError}</Alert.Description>
+    </Alert.Root>
+  {/if}
 
   <section class="tier-hero">
     <p class="eyebrow">WERDYKT FILIPA I EMILII</p>
     <h1>Nasza tier lista</h1>
     <p>Ranking aktualizuje się automatycznie razem z Waszymi ocenami.</p>
-    <div class="tier-stats" aria-label="Podsumowanie rankingu">
+    <Card.Root class="tier-stats flex-row" aria-label="Podsumowanie rankingu">
       <div><strong>{tried}</strong><span>spróbowanych</span></div>
       <div><strong>{grouped.exceptional.length}</strong><span>wyjątkowych</span></div>
       <div><strong>{grouped.excluded.length}</strong><span>wykluczonych</span></div>
-    </div>
+    </Card.Root>
   </section>
 
   <section class="tier-board" aria-label="Tier lista smaków">
     {#each tiers as tier}
-      <article class={`tier-section ${tier.id}`}>
+      <Card.Root class={`tier-section ${tier.id}`}>
         <header>
-          <div class="tier-rank">{tier.rank}</div>
+          <Badge class="tier-rank" variant={tier.id === 'excluded' ? 'destructive' : tier.id === 'untried' ? 'secondary' : 'default'}>{tier.rank}</Badge>
           <div class="tier-heading"><span>{tier.icon}</span><div><h2>{tier.label}</h2><p>{tier.description}</p></div></div>
-          <strong>{grouped[tier.id].length}</strong>
+          <Badge variant="secondary">{grouped[tier.id].length}</Badge>
         </header>
 
         <div class="tier-items" class:empty-tier={grouped[tier.id].length === 0}>
           {#each grouped[tier.id] as flavor (flavor.id)}
-            <div class="tier-flavor">
-              <span class="tier-flavor-icon">{flavor.emoji}</span>
+            <Card.Root size="sm" class="tier-flavor flex-row">
+              <Avatar.Root><Avatar.Fallback class="tier-flavor-icon">{flavor.emoji}</Avatar.Fallback></Avatar.Root>
               <div class="tier-flavor-copy"><strong>{flavor.original}</strong><a href={getShopUrl(flavor)} target="_blank" rel="noreferrer">Sklep Bolero ↗</a></div>
               {#if tier.id !== 'untried'}
                 <div class="tier-votes" aria-label={`Oceny smaku ${flavor.original}`}>
-                  <i class="vote-f" title="Filip">F <b>{verdict(ratingStore.for(flavor.id).filip)}</b></i>
-                  <i class="vote-e" title="Emilia">E <b>{verdict(ratingStore.for(flavor.id).emilia)}</b></i>
+                  <Badge variant="secondary" class="vote-f" title="Filip">F <b>{verdict(ratingStore.for(flavor.id).filip)}</b></Badge>
+                  <Badge variant="secondary" class="vote-e" title="Emilia">E <b>{verdict(ratingStore.for(flavor.id).emilia)}</b></Badge>
                 </div>
               {/if}
-            </div>
+            </Card.Root>
           {:else}
-            <div class="tier-empty"><span>{tier.icon}</span><p>Na razie pusto</p></div>
+            <Empty.Root class="tier-empty">
+              <Empty.Header>
+                <Empty.Media>{tier.icon}</Empty.Media>
+                <Empty.Title>Na razie pusto</Empty.Title>
+              </Empty.Header>
+            </Empty.Root>
           {/each}
         </div>
-      </article>
+      </Card.Root>
     {/each}
   </section>
 
-  <div class="tier-actions"><a href="/">← Wróć do oceniania</a></div>
+  <div class="tier-actions"><Button href="/" variant="outline"><ArrowLeftIcon />Wróć do oceniania</Button></div>
 </main>

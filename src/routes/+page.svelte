@@ -1,9 +1,22 @@
 <script lang="ts">
   import { flavors, familyLabels, getShopUrl } from '$lib/flavors';
   import PersonRating from '$lib/PersonRating.svelte';
-  import Search from '$lib/icons/Search.svelte';
+  import * as Alert from '$lib/components/ui/alert/index.js';
+  import { Badge } from '$lib/components/ui/badge/index.js';
+  import { Button } from '$lib/components/ui/button/index.js';
+  import * as Card from '$lib/components/ui/card/index.js';
+  import * as Empty from '$lib/components/ui/empty/index.js';
+  import * as InputGroup from '$lib/components/ui/input-group/index.js';
+  import { Progress } from '$lib/components/ui/progress/index.js';
+  import * as Select from '$lib/components/ui/select/index.js';
+  import { Separator } from '$lib/components/ui/separator/index.js';
+  import * as Tabs from '$lib/components/ui/tabs/index.js';
   import { ratingStore } from '$lib/ratings.svelte';
   import type { Flavor } from '$lib/types';
+  import CheckIcon from '@lucide/svelte/icons/check';
+  import CircleAlertIcon from '@lucide/svelte/icons/circle-alert';
+  import Undo2Icon from '@lucide/svelte/icons/undo-2';
+  import SearchIcon from '@lucide/svelte/icons/search';
   import { onMount } from 'svelte';
 
   onMount(() => { void ratingStore.load(); });
@@ -22,40 +35,72 @@
 </script>
 
 <main>
-  {#if ratingStore.syncError}<div class="db-error" role="alert">{ratingStore.syncError}</div>{/if}
+  {#if ratingStore.syncError}
+    <Alert.Root class="db-error" variant="destructive">
+      <CircleAlertIcon />
+      <Alert.Title>Błąd synchronizacji</Alert.Title>
+      <Alert.Description>{ratingStore.syncError}</Alert.Description>
+    </Alert.Root>
+  {/if}
   <section class="hero">
     <div><p class="eyebrow">PRYWATNY RANKING SMAKÓW</p><h1>Znajdźmy nasze<br/><span>Bolero idealne.</span></h1><p class="lead">Dwie opinie, jeden bezlitosny ranking. Zaznaczcie, co smakuje — resztą zajmiemy się my.</p></div>
-    <div class="progress-card">
+    <Card.Root class="progress-card">
       <div class="progress-top"><span>Wspólny postęp</span><strong>{Math.round((tried / flavors.length) * 100)}%</strong></div>
-      <div class="progress-track"><span style={`width: ${(tried / flavors.length) * 100}%`}></span></div>
+      <Progress value={tried} max={flavors.length} class="progress-track bg-white/15 [&_[data-slot=progress-indicator]]:bg-lime-300" />
       <p><strong>{tried}</strong> z {flavors.length} smaków spróbowanych</p>
-      <a href="/tier-lista">Zobacz aktualny ranking <span>→</span></a>
-    </div>
+      <Button href="/tier-lista" variant="ghost" class="progress-link">Zobacz aktualny ranking <span>→</span></Button>
+    </Card.Root>
   </section>
 
-  <section class="controls" aria-label="Filtrowanie smaków">
-    <label class="search"><Search size={19}/><input bind:value={query} placeholder="Szukaj smaku…" /></label>
-    <select bind:value={family} aria-label="Rodzina smaków"><option value="wszystkie">Wszystkie rodzaje</option>{#each Object.entries(familyLabels) as [key, label]}<option value={key}>{label}</option>{/each}</select>
-    <div class="status-tabs"><button class:active={status === 'wszystkie'} onclick={() => status = 'wszystkie'}>Wszystkie</button><button class:active={status === 'ocenione'} onclick={() => status = 'ocenione'}>Ocenione</button><button class:active={status === 'nieprobowane'} onclick={() => status = 'nieprobowane'}>Niepróbowane</button></div>
-  </section>
+  <Card.Root class="controls flex-row" aria-label="Filtrowanie smaków">
+    <InputGroup.Root class="search-field">
+      <InputGroup.Input bind:value={query} placeholder="Szukaj smaku…" aria-label="Szukaj smaku" />
+      <InputGroup.Addon><SearchIcon /></InputGroup.Addon>
+    </InputGroup.Root>
+    <Select.Root type="single" bind:value={family}>
+      <Select.Trigger class="family-select" aria-label="Rodzina smaków">
+        {family === 'wszystkie' ? 'Wszystkie rodzaje' : familyLabels[family]}
+      </Select.Trigger>
+      <Select.Content>
+        <Select.Item value="wszystkie">Wszystkie rodzaje</Select.Item>
+        {#each Object.entries(familyLabels) as [key, label]}
+          <Select.Item value={key}>{label}</Select.Item>
+        {/each}
+      </Select.Content>
+    </Select.Root>
+    <Tabs.Root bind:value={status} class="status-filter">
+      <Tabs.List class="w-full">
+        <Tabs.Trigger value="wszystkie">Wszystkie</Tabs.Trigger>
+        <Tabs.Trigger value="ocenione">Ocenione</Tabs.Trigger>
+        <Tabs.Trigger value="nieprobowane">Niepróbowane</Tabs.Trigger>
+      </Tabs.List>
+    </Tabs.Root>
+  </Card.Root>
 
-  <div class="list-heading"><p><strong>{filtered.length}</strong> {filtered.length === 1 ? 'smak' : 'smaków'}</p><div><span class="legend-dot filip"></span>Filip <span class="legend-dot emilia"></span>Emilia</div></div>
+  <div class="list-heading"><p><Badge variant="secondary">{filtered.length}</Badge> {filtered.length === 1 ? 'smak' : 'smaków'}</p><div><span class="legend-dot filip"></span>Filip <span class="legend-dot emilia"></span>Emilia</div></div>
 
   <section class="flavor-list">
     {#each filtered as flavor (flavor.id)}
-      <article class:expanded={ratingStore.isTried(flavor.id)} class:excluded={ratingStore.tier(flavor.id) === 'excluded'} class="flavor-row">
+      <Card.Root
+        size="sm"
+        class={`flavor-row ${ratingStore.isTried(flavor.id) ? 'expanded' : ''} ${ratingStore.tier(flavor.id) === 'excluded' ? 'excluded' : ''}`}
+      >
         <div class="flavor-summary">
           <div class="flavor-identity">
             <div class={`flavor-icon ${flavor.family}`}>{flavor.emoji}</div>
             <div class="flavor-copy"><h2>{flavor.original}</h2><a href={getShopUrl(flavor)} target="_blank" rel="noreferrer">Sklep Bolero <span aria-hidden="true">↗</span></a></div>
           </div>
-          <button
-            class="tried-button"
-            class:opened={ratingStore.isTried(flavor.id)}
+          <Button
+            variant={ratingStore.isTried(flavor.id) ? 'outline' : 'default'}
+            size="sm"
+            class={ratingStore.isTried(flavor.id) ? undefined : 'bg-lime-300 text-lime-950 hover:bg-lime-400'}
             onclick={() => ratingStore.markTried(flavor.id, !ratingStore.isTried(flavor.id))}
             aria-expanded={ratingStore.isTried(flavor.id)}
             aria-controls={`rating-${flavor.id}`}
-          ><span>{ratingStore.isTried(flavor.id) ? '−' : '✓'}</span>{ratingStore.isTried(flavor.id) ? 'Cofnij' : 'Oceń'}</button>
+          >
+            {#if ratingStore.isTried(flavor.id)}<Undo2Icon />{:else}<CheckIcon />{/if}
+            {ratingStore.isTried(flavor.id) ? 'Cofnij' : 'Oceń'}
+          </Button>
         </div>
         <div
           class:open={ratingStore.isTried(flavor.id)}
@@ -64,12 +109,19 @@
           inert={!ratingStore.isTried(flavor.id)}
         >
           <div class="ratings-shell">
+            <Separator class="rating-separator" />
             <div class="ratings" id={`rating-${flavor.id}`}><PersonRating flavorId={flavor.id} person="filip"/><PersonRating flavorId={flavor.id} person="emilia"/></div>
           </div>
         </div>
-      </article>
+      </Card.Root>
     {:else}
-      <div class="empty"><span>🍋</span><h2>Nie znaleźliśmy takiego smaku</h2><p>Zmień wyszukiwanie albo wyczyść filtry.</p></div>
+      <Empty.Root class="empty">
+        <Empty.Header>
+          <Empty.Media>🍋</Empty.Media>
+          <Empty.Title>Nie znaleźliśmy takiego smaku</Empty.Title>
+          <Empty.Description>Zmień wyszukiwanie albo wyczyść filtry.</Empty.Description>
+        </Empty.Header>
+      </Empty.Root>
     {/each}
   </section>
 </main>

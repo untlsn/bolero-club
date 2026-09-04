@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import { flavors, getShopUrl } from '$lib/flavors';
   import * as Alert from '$lib/components/ui/alert/index.js';
   import * as Avatar from '$lib/components/ui/avatar/index.js';
@@ -21,8 +20,6 @@
     { id: 'untried', rank: '—', label: 'Niepróbowane', icon: '◷', description: 'Te smaki wciąż czekają na swoją kolej.' },
     { id: 'excluded', rank: 'X', label: 'Wykluczone', icon: '×', description: 'Ktoś nacisnął czerwony przycisk.' }
   ];
-
-  onMount(() => { void ratingStore.load(); });
 
   let grouped = $derived(Object.fromEntries(
     tiers.map((tier) => [tier.id, flavors.filter((flavor) => ratingStore.tier(flavor.id) === tier.id)])

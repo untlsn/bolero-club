@@ -18,6 +18,11 @@ export const ratingStore = {
   get ratings() { return ratings; },
   get loaded() { return loaded; },
   get syncError() { return syncError; },
+  hydrate(initialRatings: Ratings, initialError = '') {
+    ratings = initialRatings;
+    syncError = initialError;
+    loaded = true;
+  },
   async load() {
     try {
       ratings = (await request() as Ratings) ?? {};

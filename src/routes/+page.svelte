@@ -17,9 +17,6 @@
   import CircleAlertIcon from '@lucide/svelte/icons/circle-alert';
   import Undo2Icon from '@lucide/svelte/icons/undo-2';
   import SearchIcon from '@lucide/svelte/icons/search';
-  import { onMount } from 'svelte';
-
-  onMount(() => { void ratingStore.load(); });
 
   let query = $state('');
   let family = $state<'wszystkie' | Flavor['family']>('wszystkie');

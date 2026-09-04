@@ -7,8 +7,13 @@
 	import { page } from '$app/state';
 	import * as Avatar from '$lib/components/ui/avatar/index.js';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
+	import { ratingStore } from '$lib/ratings.svelte';
 
-	let { children } = $props();
+	let { data, children } = $props();
+	function hydrateRatings() {
+		ratingStore.hydrate(data.ratings, data.ratingsError);
+	}
+	hydrateRatings();
 	let activeTab = $derived(page.url.pathname.startsWith('/tier-lista') ? '/tier-lista' : '/');
 
 	function changeTab(value: string) {

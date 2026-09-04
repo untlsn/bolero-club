@@ -1,0 +1,121 @@
+.flavor-list {
+  gap: 8px;
+}
+
+.flavor-row {
+  min-height: 0;
+  display: block;
+  padding: 10px 14px;
+  border-radius: 14px;
+  transform: none;
+}
+
+.flavor-row:hover {
+  transform: none;
+}
+
+.flavor-row.expanded {
+  padding: 14px 18px;
+}
+
+.flavor-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.flavor-identity {
+  gap: 12px;
+}
+
+.flavor-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  font-size: 22px;
+  flex: 0 0 auto;
+}
+
+.expanded .flavor-icon {
+  width: 50px;
+  height: 50px;
+  font-size: 25px;
+}
+
+.flavor-identity h2 {
+  font-size: 15px;
+  margin: 0;
+}
+
+.tried-button {
+  height: 34px;
+  padding: 0 13px;
+  border: 1px solid #b9c9c1;
+  border-radius: 9px;
+  background: #f5f9f7;
+  color: #285b47;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.tried-button span {
+  width: 17px;
+  height: 17px;
+  display: grid;
+  place-items: center;
+  border-radius: 5px;
+  background: #285b47;
+  color: #fff;
+  font-size: 10px;
+}
+
+.tried-button:hover {
+  background: #e9f2ed;
+  border-color: #789b8c;
+}
+
+.tried-button.opened {
+  background: transparent;
+  color: #777;
+  border-color: #dedfd9;
+}
+
+.tried-button.opened span {
+  background: #e7e7e2;
+  color: #676963;
+}
+
+.flavor-row .ratings {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #ecebe6;
+  gap: 18px;
+}
+
+@media (max-width: 760px) {
+  .flavor-row {
+    padding: 9px 11px;
+  }
+
+  .flavor-row.expanded {
+    padding: 13px;
+  }
+
+  .flavor-row .ratings {
+    gap: 11px;
+  }
+
+  .flavor-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .tried-button {
+    padding: 0 10px;
+  }
+}

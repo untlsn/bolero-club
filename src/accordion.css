@@ -66,10 +66,10 @@
 .tried-button {
   height: 34px;
   padding: 0 13px;
-  border: 1px solid #b9c9c1;
+  border: 1px solid #dedfd9;
   border-radius: 9px;
-  background: #f5f9f7;
-  color: #285b47;
+  background: transparent;
+  color: #777;
   font-size: 11px;
   font-weight: 700;
   cursor: pointer;
@@ -84,25 +84,30 @@
   display: grid;
   place-items: center;
   border-radius: 5px;
-  background: #285b47;
-  color: #fff;
+  background: #e7e7e2;
+  color: #676963;
   font-size: 10px;
 }
 
 .tried-button:hover {
-  background: #e9f2ed;
-  border-color: #789b8c;
+  background: #f3f3ef;
+  border-color: #c9cac4;
 }
 
 .tried-button.opened {
-  background: transparent;
-  color: #777;
-  border-color: #dedfd9;
+  background: #f5f9f7;
+  color: #285b47;
+  border-color: #b9c9c1;
 }
 
 .tried-button.opened span {
-  background: #e7e7e2;
-  color: #676963;
+  background: #285b47;
+  color: #fff;
+}
+
+.tried-button.opened:hover {
+  background: #e9f2ed;
+  border-color: #789b8c;
 }
 
 .flavor-row .ratings {

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
+  import { page } from '$app/state';
   import { flavors, familyLabels, getShopUrl, getFlavorName } from '$lib/flavors';
   import PersonRating from '$lib/PersonRating.svelte';
   import FlavorComment from '$lib/FlavorComment.svelte';
@@ -19,9 +21,24 @@
   import Undo2Icon from '@lucide/svelte/icons/undo-2';
   import SearchIcon from '@lucide/svelte/icons/search';
 
-  let query = $state('');
-  let family = $state<'wszystkie' | Flavor['family']>('wszystkie');
-  let status = $state<'wszystkie' | 'ocenione' | 'nieprobowane'>('wszystkie');
+  let query = $derived(page.url.searchParams.get('q') ?? '');
+  let family = $derived.by(() => {
+    const value = page.url.searchParams.get('family');
+    return value && Object.hasOwn(familyLabels, value) ? value as Flavor['family'] : 'wszystkie';
+  });
+  let status = $derived.by(() => {
+    const value = page.url.searchParams.get('status');
+    return value === 'ocenione' || value === 'nieprobowane' ? value : 'wszystkie';
+  });
+
+  function updateFilter(key: 'q' | 'family' | 'status', value: string) {
+    const url = new URL(window.location.href);
+    if (!value || (key !== 'q' && value === 'wszystkie')) url.searchParams.delete(key);
+    else url.searchParams.set(key, value);
+    if (url.href === page.url.href) return;
+    // Typing updates the current entry; discrete filters can be undone with Back.
+    void goto(url, { replaceState: key === 'q', noScroll: true, keepFocus: true });
+  }
   let filtered = $derived(flavors.filter((flavor) => {
     const matchesQuery = `${flavor.name} ${flavor.original}`.toLocaleLowerCase('pl').includes(query.toLocaleLowerCase('pl'));
     const matchesFamily = family === 'wszystkie' || flavor.family === family;
@@ -52,10 +69,10 @@
 
   <Card.Root class="controls flex-row" aria-label="Filtrowanie smaków">
     <InputGroup.Root class="search-field">
-      <InputGroup.Input bind:value={query} placeholder="Szukaj smaku…" aria-label="Szukaj smaku" />
+      <InputGroup.Input value={query} oninput={(event) => updateFilter('q', event.currentTarget.value)} placeholder="Szukaj smaku…" aria-label="Szukaj smaku" />
       <InputGroup.Addon><SearchIcon /></InputGroup.Addon>
     </InputGroup.Root>
-    <Select.Root type="single" bind:value={family}>
+    <Select.Root type="single" value={family} onValueChange={(value) => updateFilter('family', value)}>
       <Select.Trigger class="family-select" aria-label="Rodzina smaków">
         {family === 'wszystkie' ? 'Wszystkie rodzaje' : familyLabels[family]}
       </Select.Trigger>
@@ -66,7 +83,7 @@
         {/each}
       </Select.Content>
     </Select.Root>
-    <Tabs.Root bind:value={status} class="status-filter">
+    <Tabs.Root value={status} onValueChange={(value) => updateFilter('status', value)} class="status-filter">
       <Tabs.List class="w-full">
         <Tabs.Trigger value="wszystkie">Wszystkie</Tabs.Trigger>
         <Tabs.Trigger value="ocenione">Ocenione</Tabs.Trigger>

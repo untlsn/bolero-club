@@ -52,7 +52,7 @@
           aria-pressed={selectedIndex === index}
           onclick={() => setSelectedIndex(index)}
         >
-          {#if index > 0 && index < levels.length - 1 && selectedIndex !== index}<span aria-hidden="true"></span>{/if}
+          {#if selectedIndex !== index}<span class:endpoint={index === 0 || index === levels.length - 1} aria-hidden="true"></span>{/if}
         </button>
       {/each}
     </div>
@@ -139,6 +139,13 @@
     background: #aeb2ad;
     box-shadow: 0 0 0 1px rgb(255 255 255 / 80%);
     transition: background-color 180ms ease, transform 120ms ease;
+  }
+
+  .rating-stop-button span.endpoint {
+    width: 4px;
+    height: 4px;
+    background: #bfc3be;
+    box-shadow: none;
   }
 
   .rating-stop-button:hover span,

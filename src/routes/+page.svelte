@@ -1,6 +1,7 @@
 <script lang="ts">
   import { flavors, familyLabels, getShopUrl, getFlavorName } from '$lib/flavors';
   import PersonRating from '$lib/PersonRating.svelte';
+  import FlavorComment from '$lib/FlavorComment.svelte';
   import * as Alert from '$lib/components/ui/alert/index.js';
   import { Badge } from '$lib/components/ui/badge/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
@@ -110,6 +111,7 @@
             <div class="ratings" id={`rating-${flavor.id}`}><PersonRating flavorId={flavor.id} person="filip"/><PersonRating flavorId={flavor.id} person="emilia"/></div>
           </div>
         </div>
+        <FlavorComment flavorId={flavor.id} flavorName={getFlavorName(flavor)} />
       </Card.Root>
     {:else}
       <Empty.Root class="empty">

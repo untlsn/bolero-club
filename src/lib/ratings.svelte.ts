@@ -1,8 +1,8 @@
 import { flavors } from './flavors';
 import type { FlavorRating, Person, PersonRating, RatingLevel, Ratings, Tier } from './types';
 
-const emptyPerson = (): PersonRating => ({ tastesGood: false, exceptional: false, awful: false });
-const emptyFlavor = (): FlavorRating => ({ filip: emptyPerson(), emilia: emptyPerson(), tried: false });
+const emptyPerson = (): PersonRating => ({ rated: false, tastesGood: false, exceptional: false, awful: false });
+const emptyFlavor = (): FlavorRating => ({ filip: emptyPerson(), emilia: emptyPerson(), tried: false, comment: '' });
 
 let ratings = $state<Ratings>({});
 let loaded = $state(false);
@@ -39,7 +39,7 @@ export const ratingStore = {
     const previous = ratings;
     ratings = tried
       ? { ...ratings, [flavorId]: { ...(ratings[flavorId] ?? emptyFlavor()), tried: true } }
-      : Object.fromEntries(Object.entries(ratings).filter(([id]) => id !== flavorId));
+      : { ...ratings, [flavorId]: { ...emptyFlavor(), comment: ratings[flavorId]?.comment ?? '' } };
     try {
       await request({
         method: 'PATCH',
@@ -48,20 +48,31 @@ export const ratingStore = {
       });
       syncError = '';
     } catch (error) {
-      ratings = previous;
+      ratings = { ...ratings, [flavorId]: { ...(previous[flavorId] ?? emptyFlavor()), comment: ratings[flavorId]?.comment ?? '' } };
       syncError = error instanceof Error ? error.message : 'Nie udało się zapisać zmian.';
     }
   },
-  level(rating: PersonRating): RatingLevel {
+  level(rating: PersonRating): RatingLevel | null {
+    if (!rating.rated) return null;
     if (rating.awful) return 'awful';
     if (rating.exceptional) return 'exceptional';
     if (rating.tastesGood) return 'tasty';
     return 'neutral';
   },
+  async setComment(flavorId: string, comment: string) {
+    const savedComment = comment.trim();
+    await request({
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'set-comment', flavorId, comment: savedComment })
+    });
+    ratings = { ...ratings, [flavorId]: { ...(ratings[flavorId] ?? emptyFlavor()), comment: savedComment } };
+  },
   async setLevel(flavorId: string, person: Person, level: RatingLevel) {
     const previous = ratings;
     const current = ratings[flavorId] ?? emptyFlavor();
     const nextPerson: PersonRating = {
+      rated: true,
       awful: level === 'awful',
       tastesGood: level === 'tasty' || level === 'exceptional',
       exceptional: level === 'exceptional'
@@ -75,7 +86,7 @@ export const ratingStore = {
       });
       syncError = '';
     } catch (error) {
-      ratings = previous;
+      ratings = { ...ratings, [flavorId]: { ...(previous[flavorId] ?? emptyFlavor()), comment: ratings[flavorId]?.comment ?? '' } };
       syncError = error instanceof Error ? error.message : 'Nie udało się zapisać zmian.';
     }
   },

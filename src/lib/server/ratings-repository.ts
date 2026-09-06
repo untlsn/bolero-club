@@ -2,9 +2,9 @@ import { eq } from 'drizzle-orm';
 import { flavors } from '$lib/flavors';
 import type { Person, PersonRating, Ratings } from '$lib/types';
 import { db } from './db';
-import { flavorsTable, ratingsTable, tastingsTable } from './db/schema';
+import { commentsTable, flavorsTable, ratingsTable, tastingsTable } from './db/schema';
 
-const emptyPerson = (): PersonRating => ({ tastesGood: false, exceptional: false, awful: false });
+const emptyPerson = (): PersonRating => ({ rated: false, tastesGood: false, exceptional: false, awful: false });
 
 export async function seedFlavors() {
   await db.insert(flavorsTable).values(flavors.map((flavor) => ({
@@ -18,25 +18,41 @@ export async function seedFlavors() {
 
 export async function getRatings(): Promise<Ratings> {
   await seedFlavors();
-  const [tastings, personRatings] = await Promise.all([
+  const [tastings, personRatings, comments] = await Promise.all([
     db.select().from(tastingsTable),
-    db.select().from(ratingsTable)
+    db.select().from(ratingsTable),
+    db.select().from(commentsTable)
   ]);
 
   const result: Ratings = {};
   for (const tasting of tastings) {
-    if (tasting.tried) result[tasting.flavorId] = { tried: true, filip: emptyPerson(), emilia: emptyPerson() };
+    if (tasting.tried) result[tasting.flavorId] = { tried: true, comment: '', filip: emptyPerson(), emilia: emptyPerson() };
   }
   for (const rating of personRatings) {
-    const flavor = result[rating.flavorId] ?? { tried: true, filip: emptyPerson(), emilia: emptyPerson() };
+    const flavor = result[rating.flavorId] ?? { tried: true, comment: '', filip: emptyPerson(), emilia: emptyPerson() };
     flavor[rating.person] = {
+      rated: true,
       tastesGood: rating.tastesGood,
       exceptional: rating.exceptional,
       awful: rating.awful
     };
     result[rating.flavorId] = flavor;
   }
+  for (const { flavorId, comment } of comments) {
+    result[flavorId] = { ...(result[flavorId] ?? { tried: false, filip: emptyPerson(), emilia: emptyPerson() }), comment };
+  }
   return result;
+}
+
+export async function setComment(flavorId: string, comment: string) {
+  await seedFlavors();
+  if (!comment) {
+    await db.delete(commentsTable).where(eq(commentsTable.flavorId, flavorId));
+    return;
+  }
+  const updatedAt = new Date();
+  await db.insert(commentsTable).values({ flavorId, comment, updatedAt })
+    .onConflictDoUpdate({ target: commentsTable.flavorId, set: { comment, updatedAt } });
 }
 
 export async function setTried(flavorId: string, tried: boolean) {
@@ -56,13 +72,14 @@ export async function setTried(flavorId: string, tried: boolean) {
 export async function setPersonRating(flavorId: string, person: Person, rating: PersonRating) {
   await seedFlavors();
   const now = new Date();
+  const storedRating = { tastesGood: rating.tastesGood, exceptional: rating.exceptional, awful: rating.awful };
   await db.transaction(async (tx) => {
     await tx.insert(tastingsTable).values({ flavorId, tried: true, updatedAt: now })
       .onConflictDoUpdate({ target: tastingsTable.flavorId, set: { tried: true, updatedAt: now } });
-    await tx.insert(ratingsTable).values({ flavorId, person, ...rating, updatedAt: now })
+    await tx.insert(ratingsTable).values({ flavorId, person, ...storedRating, updatedAt: now })
       .onConflictDoUpdate({
         target: [ratingsTable.flavorId, ratingsTable.person],
-        set: { ...rating, updatedAt: now }
+        set: { ...storedRating, updatedAt: now }
       });
   });
 }

@@ -14,6 +14,12 @@ export const tastingsTable = sqliteTable('tastings', {
   updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull()
 });
 
+export const commentsTable = sqliteTable('comments', {
+  flavorId: text('flavor_id').primaryKey().references(() => flavorsTable.id, { onDelete: 'cascade' }),
+  comment: text('comment').notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull()
+});
+
 export const ratingsTable = sqliteTable('ratings', {
   flavorId: text('flavor_id').notNull().references(() => flavorsTable.id, { onDelete: 'cascade' }),
   person: text('person', { enum: ['filip', 'emilia'] }).notNull(),

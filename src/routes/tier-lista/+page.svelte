@@ -67,7 +67,7 @@
 
         <div class="tier-items" class:empty-tier={grouped[tier.id].length === 0}>
           {#each grouped[tier.id] as flavor (flavor.id)}
-            <Card.Root size="sm" class="tier-flavor flex-row">
+            <Card.Root size="sm" class="tier-flavor flex-row flex-wrap">
               <Avatar.Root><Avatar.Fallback class="tier-flavor-icon">{flavor.emoji}</Avatar.Fallback></Avatar.Root>
               <div class="tier-flavor-copy"><strong>{getFlavorName(flavor)}</strong><a href={getShopUrl(flavor)} target="_blank" rel="noreferrer">Sklep Bolero ↗</a></div>
               {#if tier.id !== 'untried'}
@@ -75,6 +75,9 @@
                   <Badge variant="secondary" class="vote-f" title="Filip">F <b>{verdict(ratingStore.for(flavor.id).filip)}</b></Badge>
                   <Badge variant="secondary" class="vote-e" title="Emilia">E <b>{verdict(ratingStore.for(flavor.id).emilia)}</b></Badge>
                 </div>
+              {/if}
+              {#if ratingStore.for(flavor.id).comment}
+                <p class="tier-comment">{ratingStore.for(flavor.id).comment}</p>
               {/if}
             </Card.Root>
           {:else}
@@ -92,3 +95,16 @@
 
   <div class="tier-actions"><Button href="/" variant="outline"><ArrowLeftIcon />Wróć do oceniania</Button></div>
 </main>
+
+<style>
+  .tier-comment {
+    flex-basis: 100%;
+    min-width: 0;
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    color: var(--app-muted);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+</style>

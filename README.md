@@ -12,6 +12,8 @@ Domyślna baza to lokalny plik `local.db`. Konfigurację Turso opisuje plik `.en
 
 Oceny są dostępne na stronie głównej, a automatyczny ranking pod adresem `/tier-lista`.
 
+Każdy smak ma wspólny komentarz (do 2000 znaków). Rozwiń „Dodaj komentarz” lub „Edytuj komentarz” i kliknij „Zapisz komentarz”. Zapisanie pustego pola usuwa komentarz. Komentarze są widoczne również w rankingu i pozostają po cofnięciu oceny. Przed uruchomieniem nowej wersji zastosuj migracje poleceniem `npm run db:migrate`.
+
 ## Vercel + Turso
 
 1. Utwórz bazę Turso i token dostępu.

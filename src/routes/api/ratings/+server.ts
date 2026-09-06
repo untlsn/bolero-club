@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import type { Person, PersonRating } from '$lib/types';
-import { flavorExists, getRatings, setPersonRating, setTried } from '$lib/server/ratings-repository';
+import { flavorExists, getRatings, setComment, setPersonRating, setTried } from '$lib/server/ratings-repository';
 
 const people: Person[] = ['filip', 'emilia'];
 
@@ -11,6 +11,14 @@ export const PATCH: RequestHandler = async ({ request }) => {
   const body = await request.json() as Record<string, unknown>;
   const flavorId = typeof body.flavorId === 'string' ? body.flavorId : '';
   if (!flavorId || !(await flavorExists(flavorId))) return json({ error: 'Nieznany smak.' }, { status: 400 });
+
+  if (body.action === 'set-comment') {
+    if (typeof body.comment !== 'string' || body.comment.length > 2000) {
+      return json({ error: 'Komentarz może mieć maksymalnie 2000 znaków.' }, { status: 400 });
+    }
+    await setComment(flavorId, body.comment.trim());
+    return json({ ok: true });
+  }
 
   if (body.action === 'set-tried' && typeof body.tried === 'boolean') {
     await setTried(flavorId, body.tried);

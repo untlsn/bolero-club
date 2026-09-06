@@ -14,7 +14,7 @@
   let initial = $derived(person === 'filip' ? 'F' : 'E');
   let value = $derived(ratingStore.for(flavorId)[person]);
   let selected = $derived(ratingStore.level(value));
-  let selectedLabel = $derived(levels.find((level) => level.id === selected)?.label ?? 'Neutralny');
+  let selectedLabel = $derived(levels.find((level) => level.id === selected)?.label ?? 'Nieoceniono');
   let selectedIndex = $derived(levels.findIndex((level) => level.id === selected));
 
   function setSelectedIndex(index: number) {
@@ -31,16 +31,17 @@
     {label}
     <strong class={`selected-level ${selected}`}>{selectedLabel}</strong>
   </div>
-  <div class={`rating-slider ${selected}`}>
+  <div class={`rating-slider ${selected ?? "unrated"}`}>
     <Slider
       type="single"
       class="max-w-[80vw]"
-      value={selectedIndex}
+      value={Math.max(0, selectedIndex)}
       min={0}
       max={levels.length - 1}
       step={1}
       onValueChange={setSelectedIndex}
       aria-label={`Ocena: ${label}`}
+      aria-valuetext={selectedLabel}
     />
     <div class="rating-stops">
       {#each levels as level, index}
@@ -63,6 +64,15 @@
     --rating-color: #737a74;
     position: relative;
     width: min(100%, 80vw);
+  }
+
+  .rating-slider.unrated :global([data-slot='slider-thumb']),
+  .rating-slider.unrated :global([data-slot='slider-range']) {
+    opacity: 0;
+  }
+
+  .rating-slider.unrated :global([data-slot='slider-thumb']:focus-visible) {
+    opacity: 1;
   }
 
   .rating-slider.awful {
